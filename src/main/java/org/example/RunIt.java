@@ -50,12 +50,14 @@ public class RunIt {
             }
             MessageProducer messageProducer = session.createProducer(destination);
             Message message = session.createTextMessage(args[6] != null ? args[7] : "This is a test message");
+            System.out.println(">> Sending Messages >>");
             for (int i = 0; i < messageCount; i++) {
                 messageProducer.send(message);
             }
             if (transacted) {
                 session.commit();
             }
+            System.out.println(">> Messages Sent: "+messageCount);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
