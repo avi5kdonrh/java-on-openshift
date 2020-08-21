@@ -31,6 +31,7 @@ public class RunIt {
            topicName = args[4].split(":")[1];
        }
       int messageCount = args[5] != null ? Integer.valueOf(args[5]) : 1;
+       boolean duplicateDetection = args[6] != null? Boolean.valueOf(args[6]):false;
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(url,user,password);
         Connection connection = null;
         Session session = null;
@@ -52,6 +53,9 @@ public class RunIt {
             Message message = session.createTextMessage(args[6] != null ? args[6] : "This is a test message");
             System.out.println(">> Sending Messages >>");
             for (int i = 0; i < messageCount; i++) {
+                if(duplicateDetection){
+                    message.setStringProperty(org.apache.activemq.artemis.api.core.Message.HDR_DUPLICATE_DETECTION_ID.toString(),"test-"+Math.random()*100+" "+i);
+                }
                 messageProducer.send(message);
             }
             if (transacted) {
